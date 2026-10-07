@@ -9,21 +9,34 @@ import type { Booking } from 'modules/Bookings/model';
 
 const STORAGE_KEY = 'mrb:bookings:v1';
 
+/**
+ * UUID v4. `crypto.randomUUID` есть только в защищённом контексте (localhost/HTTPS),
+ * а демо могут открыть и по IP в локальной сети — тогда собираем UUID из getRandomValues.
+ */
+function uuid(): string {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6]! & 0x0f) | 0x40;
+  b[8] = (b[8]! & 0x3f) | 0x80;
+  const hex = Array.from(b, (x) => x.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
 function seed(): Booking[] {
   const today = getOfficeNow().date;
   const tomorrow = addDays(today, 1);
   return [
-    { id: crypto.randomUUID(), date: today, start: '09:00', end: '09:30', title: 'Планёрка' },
+    { id: uuid(), date: today, start: '09:00', end: '09:30', title: 'Планёрка' },
     {
-      id: crypto.randomUUID(),
+      id: uuid(),
       date: today,
       start: '14:00',
       end: '15:30',
       title: 'Созвон с клиентом',
     },
-    { id: crypto.randomUUID(), date: tomorrow, start: '10:00', end: '11:00', title: 'Ретро' },
+    { id: uuid(), date: tomorrow, start: '10:00', end: '11:00', title: 'Ретро' },
     {
-      id: crypto.randomUUID(),
+      id: uuid(),
       date: tomorrow,
       start: '11:00',
       end: '12:00',
@@ -68,7 +81,7 @@ export const db = {
   find: (id: string): Booking | undefined => read().find((b) => b.id === id),
 
   insert(data: Omit<Booking, 'id'>): Booking {
-    const booking: Booking = { id: crypto.randomUUID(), ...data };
+    const booking: Booking = { id: uuid(), ...data };
     write([...read(), booking]);
     return booking;
   },

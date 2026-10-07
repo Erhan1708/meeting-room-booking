@@ -25,6 +25,31 @@ npm run dev                  # http://localhost:5173
 Деплой на Vercel: framework preset **Vite**, переменных окружения не нужно
 (`vercel.json` отдаёт `index.html` для всех путей).
 
+### Через Docker (без локального Node.js)
+
+```bash
+docker compose up --build      # http://localhost:8080
+```
+
+Многоэтапная сборка: `node:24-alpine` собирает приложение, `caddy:2-alpine` раздаёт статику
+(SPA fallback, долгий кэш ассетов, без кэша для `index.html` и `mockServiceWorker.js`).
+Бэкенд не нужен — mock API работает в браузере.
+
+Без compose:
+
+```bash
+docker build -t meeting-room-booking .
+docker run --rm -p 8080:80 meeting-room-booking
+```
+
+Для реального API — аргументы сборки:
+`docker build --build-arg VITE_API_MOCKS=false --build-arg VITE_API_URL=https://api.example.com .`
+
+> Удобнее открывать по `localhost`: там mock API работает через Service Worker. По IP в локальной
+> сети (незащищённый контекст) MSW автоматически переходит в fallback-режим и перехватывает `fetch`
+> прямо в странице — приложение тоже работает. Если mock не удалось запустить вовсе, вместо пустой
+> страницы показывается сообщение с подсказкой.
+
 ## Стек
 
 React 19, TypeScript (strict), Vite, Redux Toolkit + RTK Query, Ant Design 6, Tailwind v4,

@@ -1,0 +1,11 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        VITE_API_MOCKS: 'true'
+        VITE_API_URL: ''
+    image: meeting-room-booking
+    ports:
+      - '8080:80'
+    restart: unless-stopped
