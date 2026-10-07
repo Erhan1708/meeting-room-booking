@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "jsx-a11y"],
+  "rules": {
+    "eslint/no-unused-vars": "off",
+    "eslint/no-empty": "warn",
+
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "react/react-in-jsx-scope": "off",
+
+    "jsx-a11y/alt-text": "warn",
+
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "typescript/no-explicit-any": "error"
+  },
+  "ignorePatterns": ["dist", "node_modules", "*config.*", "*.json", "public/mockServiceWorker.js"],
+  "overrides": [
+    {
+      "files": ["src/modules/**", "src/widgets/**", "src/routes/**", "src/shared/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["mocks", "mocks/*"],
+                "message": "Приложение не должно знать о mock-сервере: он подключается только в main.tsx."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

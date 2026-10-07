@@ -1,0 +1,9 @@
+@theme {
+  --color-primary: #4f46e5;
+  --color-background: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  --color-muted: #6b7280;
+  --color-busy: #eef2ff;
+  --color-locked: #f3f4f6;
+}
