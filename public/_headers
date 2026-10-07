@@ -1,0 +1,13 @@
+# Cloudflare Pages: заголовки ответов (аналог правил из deploy/Caddyfile).
+
+# Захешированные ассеты Vite — кэш навсегда
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# index.html и Service Worker MSW — без кэша, чтобы новые версии подхватывались сразу
+/
+  Cache-Control: no-cache, no-store, must-revalidate
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+/mockServiceWorker.js
+  Cache-Control: no-cache, no-store, must-revalidate

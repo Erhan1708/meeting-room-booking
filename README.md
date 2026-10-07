@@ -3,7 +3,7 @@
 Интерфейс бронирования одной переговорной комнаты в течение рабочего дня (09:00–18:00).
 Выбор даты, просмотр броней дня, создание, редактирование и удаление броней.
 
-- **Демо:** _ссылка на Vercel_
+- **Демо:** _ссылка на Cloudflare Pages_
 - **Затрачено времени:** _~N ч_
 
 ## Запуск
@@ -22,8 +22,24 @@ npm run dev                  # http://localhost:5173
 | `npm run lint` / `npm run format` | oxlint / oxfmt                                         |
 | `npm run check-all`               | lint + проверка форматирования                         |
 
-Деплой на Vercel: framework preset **Vite**, переменных окружения не нужно
-(`vercel.json` отдаёт `index.html` для всех путей).
+### Деплой на Cloudflare Pages
+
+Бэкенд и переменные окружения не нужны: это статический сайт, mock API работает в браузере.
+
+**Через Git-интеграцию** (Workers & Pages → Create → Pages → Connect to Git):
+
+| Настройка              | Значение                        |
+| ---------------------- | ------------------------------- |
+| Framework preset       | Vite (или None)                 |
+| Build command          | `npm run build`                 |
+| Build output directory | `dist`                          |
+| Node.js                | берётся из `.node-version` (24) |
+
+**Через CLI:** `npm run deploy:pages` — сборка и загрузка через Wrangler
+(при первом запуске откроется вход в Cloudflare).
+
+- SPA-маршруты: в сборке нет `404.html`, поэтому Pages сам отдаёт `index.html` для неизвестных путей.
+- `public/_headers` — долгий кэш для `/assets/*`, без кэша для `index.html` и `mockServiceWorker.js`.
 
 ### Через Docker (без локального Node.js)
 

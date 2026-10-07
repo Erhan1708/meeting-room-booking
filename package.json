@@ -13,7 +13,8 @@
     "check-all": "oxlint . ; oxfmt --check .",
     "typecheck": "tsc -b",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "deploy:pages": "npm run build && npx wrangler pages deploy dist --project-name meeting-room-booking"
   },
   "dependencies": {
     "@ant-design/icons": "^6.3.4",
